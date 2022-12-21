@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:servicenow="http://www.mulesoft.org/schema/mule/servicenow"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/servicenow http://www.mulesoft.org/schema/mule/servicenow/current/mule-servicenow.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	    <apikit:config name="mytrains-experienceapi-config" api="mytrains-experienceapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="3472b2a0-9b23-42f3-8d5c-0ea1db7602f5" environment="${mule.env}" />
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="561294d1-a3ae-419c-b3ac-cf35d98d9004" basePath="/api" >
+		<http:request-connection host="mysqlapplication1sapi.us-e2.cloudhub.io"/>
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="90113135-72e1-49df-ae53-ef0775d4c32d" file="log.properties" />
+	<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="33468708-921f-4db3-bab4-e5be20069e81" basePath="/api/v1" >
+		<http:request-connection protocol="HTTPS" host="dev-75884940.okta.com" />
+	</http:request-config>
+	<os:config name="ObjectStore_Config" doc:name="ObjectStore Config" doc:id="5190d0c7-e62c-4cd6-bd42-c93301bcb062" />
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="7bf8a2d3-4d89-4988-9fd7-48efa5bf1e5f" config-ref="ObjectStore_Config" expirationIntervalUnit="DAYS" entryTtl="1" entryTtlUnit="DAYS"/>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f7da7ca0-e59f-446f-8626-f8407f5d4f86" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<servicenow:config name="ServiceNow_Config" doc:name="ServiceNow Config" doc:id="316b5df2-51b7-44bc-8737-60a03b03ce8c" >
+		<servicenow:basic-connection username="admin" serviceAddress="https://dev144027.service-now.com" serviceNowVersion="PARIS" password="${secure::service.password}"/>
+	</servicenow:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="d7738970-9874-4fbc-b3e6-561b741aee2a" file="${mule-env}-config.yaml" />
+	<global-property doc:name="Global Property" doc:id="638fa364-9011-43db-b60a-1a28ea9541c5" name="mule-env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="a156a29a-240c-46d9-9a36-2457d9aa83c6" name="key" value="servicenow" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="61a997da-95c0-42df-9a6d-6b771d49f754" file="${mule-env}-config.yaml" key="${key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<api-gateway:autodiscovery apiId="18370224" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a8251c71-1c33-4c79-a964-855d8aaed7f7" flowRef="mytrains-experienceapi-main" />
+</mule>

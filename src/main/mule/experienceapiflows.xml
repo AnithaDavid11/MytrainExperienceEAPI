@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<flow name="logoutuserFlow" doc:id="da11dac1-10bc-4628-8843-9e6679e43b52" >
+		<json-logger:logger doc:name="Start Logger" doc:id="e168f605-a5b8-45ab-93a9-4e08b1c2a0b7" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<os:retrieve doc:name="Retrieve" doc:id="f89d1077-ed8f-465f-8774-19d32ee70607" key="sessionid" objectStore="Object_store"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5da78d5e-0e78-4fce-af52-fd93b3b6993c" variableName="sessionid"/>
+		<http:request method="DELETE" doc:name="Request" doc:id="110a0f77-2c0c-4c2a-bd1a-7febdc60584f" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.sessionid
+	}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="1cda7d82-6b06-4bbe-bf76-ff631c55c526">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "User logged out successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="d08a3c16-5bb5-44fe-bc07-3f8fa492032c" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="updateuserFlow" doc:id="bc6f9b09-46ab-434c-bbc5-f667a33e3163" >
+		<json-logger:logger doc:name="Start Logger" doc:id="12eea7ad-502d-4365-96df-a94fe98300af" config-ref="JSON_Logger_Config" message="Start Logger" />
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="3904d54a-adb8-4eec-9a1c-cd3b26597f83" variableName="phone"/>
+		<os:retrieve doc:name="Retrieve" doc:id="97c4d5ae-1ccb-402e-a1fe-35edc081430e" key="sessionid" objectStore="Object_store" >
+			<os:default-value ><![CDATA["default"]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="86affe93-ddd7-4fc6-b005-94c7bbaac67c" variableName="session_id" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="ef578829-75a3-49fc-b278-e76079f15ad3" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.session_id
+}]]]></http:uri-params>
+		</http:request>
+		<os:retrieve doc:name="Retrieve" doc:id="10ac2546-295c-4922-996a-791c61a69cf4" key="id" objectStore="Object_store" >
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="1a6f0749-7955-4454-9686-6038b02c1c5e" variableName="id" />
+		<http:request method="PUT" doc:name="Requesting updateuser flow-MYSQL" doc:id="f1330062-00da-411f-96ad-c214b71acee7" config-ref="HTTP_Request_configuration" path="/user/{user_id}/updateuser" >
+			<http:body ><![CDATA[#[{
+PHONE_NUMBER :vars.phone.PHONE_NUMBER}]]]></http:body>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"user_id" : vars.id
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="feb2c8e2-32ea-42c4-bcae-9b7848e1d2b2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Your phone number is updated"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="a0e5f344-be45-490a-880e-31549c951010" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END" />
+	</flow>
+	<flow name="getuserFlow" doc:id="7201a139-3c9f-45b2-922e-7b3973e7804c" >
+		<json-logger:logger doc:name="Logger" doc:id="6189597f-dbb8-4fa2-9e89-691783ee4649" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<os:retrieve doc:name="Retrieve" doc:id="2d027fc1-7ad5-4259-9bfb-6bcf725f9459" key="sessionid" objectStore="Object_store" >
+			<os:default-value ><![CDATA["default"]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="c1eb2e12-1bdc-446e-adc9-0f8530a42186" variableName="session_id" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="a9fa288c-9f78-47f7-8d14-79962db31f76" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.session_id
+}]]]></http:uri-params>
+		</http:request>
+		<os:retrieve doc:name="Retrieve" doc:id="34eed284-d8ca-4c80-b6ea-1438d85dd550" key="id" objectStore="Object_store" >
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="7e15fa17-149a-4e17-a54c-fae2d4565ce8" variableName="id" />
+		<http:request method="GET" doc:name="Request" doc:id="a1b833b8-272b-465d-860e-2e7dab10befe" config-ref="HTTP_Request_configuration" path="/user/{user_id}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"user_id" : vars.id}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="164924a0-9847-4215-8fcb-e9eff480d78b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="e87b9550-d93e-4603-b5e8-02bf6d82c178" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="Registeruser" doc:id="947addd6-9ddc-4a28-94bf-84787e0556ec" >
+		<json-logger:logger doc:name="Start Logger" doc:id="9350c9f8-8afa-49ea-bac0-44b2d0bf1012" config-ref="JSON_Logger_Config" message="Start Logger" />
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="856e876e-6bf9-4037-8e0b-f4f6823126fb" variableName="initialpayload"/>
+		<http:request method="POST" doc:name="Request" doc:id="320986d7-3c27-457b-95d4-fcd2ff897d71" config-ref="HTTP_Request_configuration1" path="/users?activate=true" >
+			<http:body ><![CDATA[#[output application/json
+---
+{
+  "profile": {
+    "firstName": vars.initialpayload.FIRST_NAME,
+    "lastName": vars.initialpayload.LAST_NAME,
+    "email": vars.initialpayload.EMAIL_ID,
+    "login": vars.initialpayload.EMAIL_ID },
+  "credentials": {
+    "password" : { "value": vars.initialpayload.PASSWORD}
+  }
+}]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<os:store doc:name="Store" doc:id="1840938f-f7f5-4cab-93c7-34c70ca36a65" key="id" objectStore="Object_store">
+		</os:store>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="80dca33f-266e-4084-9841-d900ff91e821" variableName="userid"/>
+		<http:request method="POST" doc:name="Request" doc:id="f6e756fc-562e-4db3-ac13-2685f1c35bb1" config-ref="HTTP_Request_configuration" path="/user">
+			<http:body><![CDATA[#[{
+USER_ID : vars.userid,
+EMAIL_ID: vars.initialpayload.EMAIL_ID,
+STATUS_TYPE_ID: vars.initialpayload.STATUS_TYPE_ID,
+FIRST_NAME :vars.initialpayload.FIRST_NAME,
+LAST_NAME :vars.initialpayload.LAST_NAME,
+PHONE_NUMBER : vars.initialpayload.PHONE_NUMBER
+}]]]></http:body>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="aee315b3-0f11-405c-9cd7-e0700e35cdaa">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+"Message" : "User registered successfully"
+
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="85ac9afa-eca0-49da-b8d1-06b59d0cc107" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="Loginuser" doc:id="98fc92e9-9597-42fc-a475-c9bd7d4b3592" >
+		<json-logger:logger doc:name="Start Logger" doc:id="55749fc7-8029-45a3-bc1a-67e8d5566772" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<http:request method="POST" doc:name="Requesting authn flow" doc:id="c1bfa238-b94b-4f59-b345-aa62f0b4079a" config-ref="HTTP_Request_configuration1" path="/authn" >
+			<http:body ><![CDATA[#[output application/json
+---
+{
+  "username": payload.username,
+  "password": payload.password,
+  "options": {
+    "multiOptionalFactorEnroll": true,
+    "warnBeforePasswordExpired": true
+  }  
+}]]]></http:body>
+		</http:request>
+		<set-variable value="#[payload.sessionToken]" doc:name="Variable sessiontoken" doc:id="bd19a7c5-8255-48a7-ad9f-20d49d7e0a57" variableName="sessiontoken" />
+		<http:request method="POST" doc:name="Requesting create session flow" doc:id="4d624f76-e12a-4bec-9e7f-bbef09ea927f" config-ref="HTTP_Request_configuration1" path="/sessions?additionalFields=cookieToken" >
+			<http:body ><![CDATA[#[output application/json
+---
+{
+  "sessionToken": vars.sessiontoken
+    }]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<set-variable value="#[payload.id]" doc:name="sessionid" doc:id="f82621b3-c492-4e8c-b210-b953d14babd2" variableName="sessionid" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="d8047f66-4ceb-4408-8513-0df574531679" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.sessionid
+}]]]></http:uri-params>
+		</http:request>
+		<os:store doc:name="Store" doc:id="b02b315c-3edc-4314-9114-d9b0826569cf" key="sessionid" objectStore="Object_store" >
+			<os:value ><![CDATA[#[payload.id]]]></os:value>
+		</os:store>
+		<ee:transform doc:name="Transform Message" doc:id="a55ca15c-a108-4a84-8230-6f9abfc49817" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "User logged in successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="addsubscription" doc:id="4e1b1278-ee7b-4221-ab06-30d269fa71da" >
+		<json-logger:logger doc:name="Start Logger" doc:id="9d4076d6-09ea-47fe-a80b-6e784add355c" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="00f35d8b-a56b-474f-be70-38ccf7cb606c" variableName="initialpayload"/>
+		<os:retrieve doc:name="Retrieve" doc:id="dcf1b843-e1ff-4ead-ad7f-a817b74b7953" key="sessionid" objectStore="Object_store" >
+			<os:default-value ><![CDATA["default"]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="6f182d21-d24e-463c-9f61-3e85487877dd" variableName="session_id" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="65cdbdea-435b-488b-904c-52da5bf6d5ae" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.session_id
+}]]]></http:uri-params>
+		</http:request>
+		<os:retrieve doc:name="Retrieve" doc:id="3f6870e1-eb5c-445b-815a-adb313341e8a" key="id" objectStore="Object_store">
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="fce33abd-b42a-4598-a1a7-e19ae7a96692" variableName="id"/>
+		<set-variable value="#[randomInt(5000)]" doc:name="Set Variable" doc:id="7c628b91-5a8b-471f-bf0a-71c05e4b4b68" variableName="subscriptionid"/>
+		<ee:transform doc:name="Transform Message" doc:id="00a5a7e1-597e-47d7-8bfa-a166be1fbd3f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+SUBSCRIPTION_ID: vars.subscriptionid,
+USER_ID: vars.id,
+STATUS_TYPE_ID: vars.initialpayload.STATUS_TYPE_ID,
+SOURCE_LOCATION: vars.initialpayload.SOURCE_LOCATION,
+DESTINATION_LOCATION: vars.initialpayload.DESTINATION_LOCATION,
+FROM_TIME: vars.initialpayload.FROM_TIME,
+TO_TIME: vars.initialpayload.TO_TIME,
+ADVANCE_NOTIFY_TIME_MIN: vars.initialpayload.ADVANCE_NOTIFY_TIME_MIN
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<os:store doc:name="Store" doc:id="4a151222-e0fc-4163-be48-8537ab6d106d" key="subscriptionid" objectStore="Object_store">
+			<os:value><![CDATA[#[payload.SUBSCRIPTION_ID]]]></os:value>
+		</os:store>
+		<http:request method="POST" doc:name="Request" doc:id="61d9139e-0c01-4a87-8845-3fc3585e1a4b" config-ref="HTTP_Request_configuration" path="/subscriptions" target="subscriptionid" targetValue="#[payload.SUBSCRIPTION_ID]">
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="884a1da7-896b-4815-bea0-269b4de2e73d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Subscription added successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="f3267816-89a8-481b-bc6f-984a0ec6b668" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="updatesubscription" doc:id="caf24dd2-8574-474e-a895-95508d8c5c80" >
+		<json-logger:logger doc:name="Logger" doc:id="1cac1260-4e33-4665-9c0c-205bd6eb72a4" config-ref="JSON_Logger_Config" message="start logger"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5405baf3-322a-49c2-98f5-960c40d91c33" variableName="initialpayload"/>
+		<set-variable value="#[attributes.uriParams.subscription_id]" doc:name="Set Variable" doc:id="33ffe344-b7a5-4b65-bc36-99cb269a9635" variableName="subscription_id" />
+		<os:retrieve doc:name="Retrieve" doc:id="42393efe-5889-4745-bb4e-158cdcb115ae" key="sessionid" objectStore="Object_store" >
+			<os:default-value ><![CDATA["default"]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="0e0c45c8-c1ad-4e86-842a-f7a706d100b8" variableName="session_id" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="45fb07aa-0039-44b8-b5ea-b6cc56e2c8db" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.session_id
+}]]]></http:uri-params>
+		</http:request>
+		<os:retrieve doc:name="Retrieve" doc:id="d137d1e5-e2e8-4178-a169-411ff02f18e9" key="id" objectStore="Object_store">
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="cec1702e-64b9-49e6-a01b-2f0722c02619" variableName="user_id"/>
+		<http:request method="PUT" doc:name="Request" doc:id="a5d15e58-221f-4963-a4f0-c7da81697018" config-ref="HTTP_Request_configuration" path="/user/{user_id}/subscription/{subscription_id}">
+			<http:body ><![CDATA[#[vars.initialpayload]]]></http:body>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	
+	"user_id" : vars.user_id,
+	"subscription_id" : vars.subscription_id
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="dba78698-8177-4287-ab58-6f3d5bbaa463" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Your subscription details are updated"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="b0b23698-cd0e-4174-9e8e-effae3045c31" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="getsubscription" doc:id="1210bffc-3abe-494e-bbb0-5d92b93be669" >
+		<json-logger:logger doc:name="Logger" doc:id="41517c68-9688-4b17-9e75-e28df1746550" config-ref="JSON_Logger_Config" message="start logger"/>
+		<os:retrieve doc:name="Retrieve" doc:id="d3b22eb4-0d11-4c52-b3fd-a67a07ef05b0" key="sessionid" objectStore="Object_store" >
+			<os:default-value ><![CDATA["default"]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="bf684ee4-671a-4e2e-8744-d10960666c83" variableName="session_id" />
+		<http:request method="GET" doc:name="Requesting validate session" doc:id="b63e16b2-15df-4e1a-a3da-7d06617e2d99" config-ref="HTTP_Request_configuration1" path="/sessions/{userid}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.session_id
+}]]]></http:uri-params>
+		</http:request>
+		<os:retrieve doc:name="Retrieve" doc:id="4248b10c-15b4-4585-8b1b-fe23de53e524" key="id" objectStore="Object_store">
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="6a310773-0c35-4bb0-879a-a4ee4e20725f" variableName="user_id"/>
+		<http:request method="GET" doc:name="Request" doc:id="21040105-d0ac-4b79-882c-0830f66bd9c8" config-ref="HTTP_Request_configuration" path="/user/{user_id}/subscription">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"user_id" : vars.user_id
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="54750a71-17f6-4724-ae96-75aaf863c82e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="2dd42576-a5e2-40a1-8017-b7d7b563f4d8" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="changepassword" doc:id="88f289fa-234c-49e4-8979-d6086a910994" >
+		<json-logger:logger doc:name="Start Logger" doc:id="b1b2ba62-82aa-42d3-bc09-4fce9efe2c2b" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="e1bf759c-2255-4542-86f7-7fc58a756fb0" variableName="initial"/>
+		<os:retrieve doc:name="Retrieve" doc:id="40be5a8e-a1e2-4030-9f7f-3527b5cd00ba" key="id" objectStore="Object_store" >
+			<os:default-value ><![CDATA[#[{
+	"id" : "111"
+}]]]></os:default-value>
+		</os:retrieve>
+		<set-variable value="#[payload.id]" doc:name="Set Variable" doc:id="741d8fce-c0ea-41af-a584-79f91d4723c4" variableName="id" />
+		<http:request method="POST" doc:name="Request" doc:id="b4f3b706-707c-477b-9396-6b6dde7a1ca9" config-ref="HTTP_Request_configuration1" path="/users/{userid}/credentials/change_password">
+			<http:body ><![CDATA[#[output application/json
+---
+{
+  "oldPassword":  vars.initial.oldPassword.value ,
+  "newPassword":  vars.initial.newPassword.value 
+}]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "SSWS00_D2c1xXoGDGNbA8HMeOZWhGPu89XJN-nd9iUP8iv",
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"userid" : vars.id}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="ff7a49bb-51b4-4e20-9b6f-4c7c9b50ea00" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Your password has been changed successfully "
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="d786bb28-889a-406e-ad05-335e3ce2c31c" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+	<flow name="recoverypassword" doc:id="c7ee579b-ed62-4b97-8d05-222d1364a2cd" >
+		<json-logger:logger doc:name="Start Logger" doc:id="8e5418fa-238c-46d2-af7f-f6b7c2992943" config-ref="JSON_Logger_Config" message="Start Logger"/>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5649740e-6dff-48ed-90a3-c959def79d9b" variableName="a"/>
+		<http:request method="POST" doc:name="Request" doc:id="4737c898-417b-4380-85b4-58ca4eade138" config-ref="HTTP_Request_configuration1" path="/authn/recovery/password">
+			<http:body ><![CDATA[#[vars.a]]]></http:body>
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Accept" : "application/json",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="f84747f6-d989-401c-b80f-a5d4006c7418" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message" : "Recovery password link is sent to your email-id"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="6b55bae9-a6a0-46c7-9f28-9631c4605118" config-ref="JSON_Logger_Config" message="End Logger" tracePoint="END"/>
+	</flow>
+</mule>

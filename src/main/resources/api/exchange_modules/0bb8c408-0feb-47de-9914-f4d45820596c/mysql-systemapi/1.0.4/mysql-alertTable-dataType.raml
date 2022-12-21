@@ -1,0 +1,29 @@
+#%RAML 1.0 DataType
+type: object
+displayName: "Alert table"
+properties:
+  ALERT_TRANSACTION_ID:
+    type: number
+    displayName: "ALERT_TRANSACTION_ID"
+    example: 2
+  SUBSCRIPTION_ID:
+    type: number
+    displayName: "SUBSCRIPTION_ID"
+    example: 24
+  DELAY_TYPE_FLAG:
+    type: string
+    displayName: "DELAY_TYPE_FLAG"
+    example: "delayed"
+  NOTIFICATION_STATUS:
+    type: string
+    displayName: "NOTIFICATION_STATUS"
+    example: "Notification sent"
+  NOTIFICATION_FAILURE_DETAIL:
+    type: string
+    displayName: "NOTIFICATION_FAILURE_DETAIL"
+    example: "Engine repair"
+  DELAY_TIME:
+    type: number
+    displayName: "DELAY_TIME"
+    example: 30
+  

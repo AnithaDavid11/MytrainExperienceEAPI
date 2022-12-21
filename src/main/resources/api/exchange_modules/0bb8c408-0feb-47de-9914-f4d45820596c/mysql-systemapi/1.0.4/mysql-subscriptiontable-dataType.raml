@@ -1,0 +1,39 @@
+#%RAML 1.0 DataType
+type: object
+displayName: "Add Subscription"
+properties:
+  SUBSCRIPTION_ID:
+    type: number
+    displayName: "SUBSCRIPTION_ID"
+    example: 2
+  USER_ID:
+    type: string
+    displayName: "USER_ID"
+    example: "100"
+  STATUS_TYPE_ID:
+    type: number
+    displayName: "STATUS_TYPE_ID"
+    example: 1
+  SOURCE_LOCATION:
+    type: string
+    displayName: "SOURCE_LOCATION"
+    example: "AWR"
+  DESTINATION_LOCATION:
+    type: string
+    displayName: "DESTINATION_LOCATION"
+    example: "DSE"
+  FROM_TIME:
+    type: time-only
+    displayName: "FROM_TIME"
+    example: 18:00:00
+  TO_TIME:
+    type: time-only
+    displayName: "TO_TIME"
+    example: 18:30:00
+  ADVANCE_NOTIFY_TIME_MIN:
+    type: number
+    displayName: "ADVANCE_NOTIFY_TIME_MIN"
+    example: 30
+  
+  
+  

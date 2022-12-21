@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:servicenow="http://www.mulesoft.org/schema/mule/servicenow"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/servicenow http://www.mulesoft.org/schema/mule/servicenow/current/mule-servicenow.xsd">
+	<error-handler name="errorhandlingError_Handler" doc:id="b418b811-d8f7-46fd-b200-e8053fbe2691" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="620488ba-21a0-4da5-b912-d854f99c055a" type="ANY">
+			<ee:transform doc:name="Create incident" doc:id="3f0e1210-9724-48d3-8c27-9c4c3ab9215a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://www.service-now.com/incident
+---
+{
+	ns0#insert: {
+		caller_id: "anithad11.28@gmail.com",
+		comments: "Please check the errors",
+		short_description: "Error in flows",
+		state: "New"
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<servicenow:invoke doc:name="Invoke" doc:id="c69d86f2-7eb2-42a9-ae51-9802f779869e" config-ref="ServiceNow_Config" service="incident" operation="insert" showReferenceValues="ALL"/>
+			<ee:transform doc:name="Transforming Message to json" doc:id="89ecbf60-97db-4ec3-a073-c5e2b3a40fff" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	</mule>

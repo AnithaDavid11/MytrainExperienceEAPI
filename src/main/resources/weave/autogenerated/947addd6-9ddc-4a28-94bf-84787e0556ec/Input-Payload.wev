@@ -1,0 +1,25 @@
+%dw 2.0
+
+type auto_947addd6_9ddc_4a28_94bf_84787e0556ec_Input_Payload = {
+  credentials: {
+    password: {
+      value: String, 
+      _?: Any
+    } {"label": "password"}, 
+    recovery_question: {
+      question: String, 
+      answer: String, 
+      _?: Any
+    } {"label": "recovery_question"}, 
+    _?: Any
+  } {"label": "credentials"}, 
+  profile: {
+    firstName: String, 
+    lastName: String, 
+    login: String, 
+    email: String, 
+    _?: Any
+  } {"label": "profile"}, 
+  _?: Any
+} {"label": "Create user with password"}
+

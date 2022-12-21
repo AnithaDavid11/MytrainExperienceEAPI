@@ -1,0 +1,221 @@
+#%RAML 1.0
+title: MyTrains-ExperienceAPI
+baseUri: https://dev-75884940.okta.com/api/v1
+description: "This API will give you the best experience for the trains service by providing the delay information"
+version: v1
+
+
+traits:
+  error: !include exchange_modules/0bb8c408-0feb-47de-9914-f4d45820596c/errorcodes/1.0.0/errorcodes.raml
+
+uses:
+  mysql-library: /exchange_modules/0bb8c408-0feb-47de-9914-f4d45820596c/mysql-systemapi/1.0.4/mysql-datatype.raml
+  okta-library: /exchange_modules/0bb8c408-0feb-47de-9914-f4d45820596c/okta-datatype-library/1.0.4/okta-datatype-library.raml
+
+/registeruser:
+  post:
+    description: "This table is to register user details"
+    is:
+       - error
+    body:
+      application/json:
+        type: object
+        properties:
+         EMAIL_ID: 
+          type: string
+         STATUS_TYPE_ID:
+          type: number
+         FIRST_NAME:
+          type: string
+         LAST_NAME:
+          type: string
+         PHONE_NUMBER:
+          type: number
+         PASSWORD:
+          type: string
+    responses:
+      201:
+        description: "Success response for register user "
+        body:
+          application/json:
+            type : string
+            example: "Message: Your details are added to okta"
+/Loginuser:
+  post:
+    description: "This table is to login user details"
+    is:
+       - error
+    body:
+      application/json:
+        type: okta-library.primaryauthentication
+    responses:
+      201:
+        description: "Success response for login user "
+        body:
+          application/json:
+            type : string
+            example: "Message: Your login into your account successfully"
+    
+/user/updateuser:
+  put:
+    description: "Updating user"
+    is:
+      - error
+    body:
+      application/json:
+        properties:
+         PHONE_NUMBER:
+           type: number
+           example: 98765432
+    responses:
+      200:
+        description: "Success response for updating user"
+        body:
+          application/json:
+            type: string
+            example: "Your phone number is updated"
+        
+/user/getuser:
+  get:
+    is:
+      - error
+    description: "Getting user details with user id"
+    responses:
+      200:
+        body:
+          application/json:
+            type: mysql-library.user
+  
+
+/subscriptions:
+  post:
+    description: "This table is to create subscription details"
+    is:
+       - error
+    body:
+      application/json:
+        type: object
+        properties:
+         STATUS_TYPE_ID:
+          type: number
+         SOURCE_LOCATION:
+          type: string
+         DESTINATION_LOCATION:
+          type: string
+         FROM_TIME:
+          type: time-only
+         TO_TIME:
+          type: time-only
+         ADVANCE_NOTIFY_TIME_MIN:
+          type: number
+    responses:
+      201:
+        description: "Success response for subscription table"
+        body:
+          application/json:
+            type : string
+            example: "Message: Your details are added to subscription table"
+
+
+  
+
+/subscription/updatesubscription/{subscription_id}:
+  put:
+    description: "Updating subscription details"
+    is:
+      - error
+    body:
+      application/json:
+        type: object
+        properties:
+         SOURCE_LOCATION:
+          type: string
+         DESTINATION_LOCATION:
+          type: string
+         FROM_TIME:
+          type: time-only
+         TO_TIME:
+          type: time-only
+         STATUS_TYPE_ID:
+          type: number
+    responses:
+      200:
+        description: "Success response of update subscriptions"
+        body:
+          application/json:
+            type: string
+            example: "Message: Your details are updated"
+            
+/subscription/getusersubscription:            
+ get:
+    description: "View subscription details"
+    is:
+      - error
+    responses:
+     200:
+       body:
+         application/json:
+           type: mysql-library.subscription
+
+ 
+
+/user/change_password:
+  post:
+    headers:
+      Content-Type:
+      Accept: 
+      Authorization: 
+    description: "Change password of user"
+    is:
+      - error
+    body:
+      application/json: 
+       type: okta-library.changepassword
+    responses:
+      201:
+        description: "Success response of change password"
+        body:
+          application/json:
+            type: okta-library.changepassword
+
+/authn/recovery/password:
+  post:
+    headers:
+      Content-Type:
+      Accept: 
+      
+    description: "Recovering password with email"
+    is:
+      - error
+    body:
+        application/json:
+         type: okta-library.forgetpassword
+    responses:
+      201:
+        description: "Success response of recovery password"
+        body:
+          application/json:
+            type: okta-library.forgetpassword
+
+
+/user/logout:
+  delete:
+   
+    description: "Logging out"
+    is:
+      - error
+    responses:
+     200:
+       body:
+         application/json:
+           type: string
+           example: "You logged out successfully"
+
+
+
+
+
+
+
+
+

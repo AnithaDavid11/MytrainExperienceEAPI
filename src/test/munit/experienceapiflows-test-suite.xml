@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="experienceapiflows-test-suite.xml" />
+	<munit:test name="experienceapiflows-test-suite-RegisteruserTest" doc:id="ed2d10cc-4419-49bc-896e-b078be82f1ad" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="961a92a4-721c-4ffd-9861-0fc00caa5073" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="320986d7-3c27-457b-95d4-fcd2ff897d71" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/users?activate=true" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;"EMAIL_ID": "exampleN@email.com",&#10;  "STATUS_TYPE_ID": 1,&#10;  "FIRST_NAME": "HASYew",&#10;  "LAST_NAME": "New",&#10;  "PHONE_NUMBER": 25276563,&#10;  "PASSWORD" : "Harryw@123"&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="691fee39-12d1-476f-8677-67a854877da8" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f6e756fc-562e-4db3-ac13-2685f1c35bb1" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/user" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;"USER_ID": 1221,&#10;"EMAIL_ID": "exampleN@email.com",&#10;  "STATUS_TYPE_ID": 1,&#10;  "FIRST_NAME": "HASYew",&#10;  "LAST_NAME": "New",&#10;  "PHONE_NUMBER": 25276563,&#10;  "PASSWORD" : "Harryw@123"&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to Registeruser" doc:id="e58352ff-ab80-4eff-b6cc-bae1df392a21" name="Registeruser"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="01779a79-51e9-44fe-9805-76c8e6643c82" actual="#[payload]" expected='#[{&#10;    "Message": "User registered successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-LoginuserTest" doc:id="f1cff539-da4c-45df-be53-8dce99eaab1c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="eb51161f-6101-46c6-b3e0-42137ae9d696" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting authn flow" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="c1bfa238-b94b-4f59-b345-aa62f0b4079a" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/authn" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  "username": "toierq@example.com",&#10;  "password": "Tat@euj67543",&#10;  "options": {&#10;    "multiOptionalFactorEnroll": true,&#10;    "warnBeforePasswordExpired": true&#10;  }&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="95278641-a0d4-40cc-9c8c-21f19b370fef" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting create session flow" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="4d624f76-e12a-4bec-9e7f-bbef09ea927f" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions?additionalFields=cookieToken" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  "sessionToken": "20111ql0QdAaePdvUHvxqOqKGjyaBH8WrdgrfCZIHT6ZwWNoZACcJ7f"&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="57e8ec77-8a7f-43ca-99d9-7dd47dd0f70f" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d8047f66-4ceb-4408-8513-0df574531679" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;    "id": "102G78rNSrfRGehMaqK6loxjg",&#10;    "userId": "00u7lglxjpbtJFZDY5d7",&#10;    "login": "toierq@example.com",&#10;    "createdAt": "2022-12-20T00:22:52.000Z",&#10;    "expiresAt": "2022-12-20T02:22:52.000Z",&#10;    "status": "ACTIVE",&#10;    "lastPasswordVerification": "2022-12-20T00:22:52.000Z",&#10;    "lastFactorVerification": "2022-12-20T00:22:52.000Z",&#10;    "amr": [&#10;        "pwd"&#10;    ],&#10;    "idp": {&#10;        "id": "00o7cvwkjc6lAwgiS5d7",&#10;        "type": "OKTA"&#10;    },&#10;    "mfaActive": true,&#10;    "cookieToken": "20111GL0s_iTh0ezxUC0UfRwpxvO19mPl1apy9NfhtE6nasTvhXm4Wp",&#10;    "_links": {&#10;        "self": {&#10;            "href": "https://dev-75884940.okta.com/api/v1/sessions/me",&#10;            "hints": {&#10;                "allow": [&#10;                    "GET",&#10;                    "DELETE"&#10;                ]&#10;            }&#10;        },&#10;        "refresh": {&#10;            "href": "https://dev-75884940.okta.com/api/v1/sessions/me/lifecycle/refresh",&#10;            "hints": {&#10;                "allow": [&#10;                    "POST"&#10;                ]&#10;            }&#10;        },&#10;        "user": {&#10;            "name": "toer pop",&#10;            "href": "https://dev-75884940.okta.com/api/v1/users/me",&#10;            "hints": {&#10;                "allow": [&#10;                    "GET"&#10;                ]&#10;            }&#10;        }&#10;    }&#10;}]' />
+					<munit-tools:attributes value="#[{uriParams : {userid:'102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to Loginuser" doc:id="81c1a90b-1685-4f3a-b429-13e7593e1060" name="Loginuser"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="feded6ec-5c69-4acc-b35a-39c513391f0c" actual="#[payload]" expected='#[{&#10;    "Message": "User logged in successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-updateuserFlowTest" doc:id="5488bee6-2b85-4bee-a619-d19fb26f7aa1" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="70e7fe47-7452-467c-8be2-a2ed2918e2de" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="ef578829-75a3-49fc-b278-e76079f15ad3" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value="#[{uriParams : { userid : '102G78rNSrfRGehMaqK6loxjg' }}]&#10;" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1cdfa297-cccf-4046-8274-7d89c425d921" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting updateuser flow-MYSQL" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f1330062-00da-411f-96ad-c214b71acee7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/user/{user_id}/updateuser" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;   "PHONE_NUMBER" : 24567848&#10;}]' />
+					<munit-tools:attributes value="#[{uriParams : { user_id : '111' }}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to updateuserFlow" doc:id="4eb24373-bfde-47f7-aeb7-58f65c907b90" name="updateuserFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="4db4accd-88ea-4d73-b77e-69e604a83aa4" actual="#[payload]" expected='#[{&#10;	"Message" : "Your phone number is updated"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-getuserFlowTest" doc:id="66c44d58-88f9-4b09-ad3b-21a58051974b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="8cb07fd3-d3ef-4742-8296-3bbe471959d9" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a9fa288c-9f78-47f7-8d14-79962db31f76" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[{uriParams : {userid : '102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="dc5c35de-e6e0-4327-bb89-552e83e3ed38" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a1b833b8-272b-465d-860e-2e7dab10befe" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/user/{user_id}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[[&#10;    {&#10;        "EMAIL_ID": "avnid@email.com",&#10;        "USER_ID": "111",&#10;        "STATUS_TYPE_ID": 1,&#10;        "UPDATED_TIMESTAMP": "2022-12-09T17:30:35",&#10;        "LAST_NAME": "David",&#10;        "PHONE_NUMBER": "12345600",&#10;        "CREATED_TIMESTAMP": "2022-12-09T17:30:21",&#10;        "FIRST_NAME": "Avni"&#10;    }&#10;]]' />
+					<munit-tools:attributes value="#[{uriParams : {user_id : '102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getuserFlow" doc:id="8ba8b03d-044a-47c1-8ede-4c5f7da42fe3" name="getuserFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d4a8911c-a34a-46b9-8d52-af08bf5f85c6" actual="#[payload]" expected='#[[&#10;    {&#10;        "EMAIL_ID": "avnid@email.com",&#10;        "USER_ID": "111",&#10;        "STATUS_TYPE_ID": 1,&#10;        "UPDATED_TIMESTAMP": "2022-12-09T17:30:35",&#10;        "LAST_NAME": "David",&#10;        "PHONE_NUMBER": "12345600",&#10;        "CREATED_TIMESTAMP": "2022-12-09T17:30:21",&#10;        "FIRST_NAME": "Avni"&#10;    }&#10;]]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-recoverypasswordTest" doc:id="44840755-fb37-46e1-be9b-de33c965a118" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7fd84732-3bfd-42e8-bc47-b59e5f509275" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="4737c898-417b-4380-85b4-58ca4eade138" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/authn/recovery/password" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  "username": "anjiwu@email.com",&#10;  "factorType": "EMAIL",&#10;  "relayState": "/myapp/some/deep/link/i/want/to/return/to"&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to recoverypassword" doc:id="e54f7d5c-2c83-4fff-8bee-adb7989a3ae5" name="recoverypassword"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="706e0122-57fc-4464-b072-eaadea47d966" actual="#[payload]" expected='#[{&#10;	"Message" : "Recovery password link is sent to your email-id"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-changepasswordTest" doc:id="9912de25-e4bc-45f2-8e9f-5bd146d4f4ff" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="32058b9d-3d90-4fae-b5aa-d90cf6681ad5" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b4f3b706-707c-477b-9396-6b6dde7a1ca9" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/users/{userid}/credentials/change_password" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  "oldPassword": {&#10;    "value": "Lo!2asdfg"&#10;  },&#10;  "newPassword": {&#10;    "value": "New@uj67543"&#10;  }&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to changepassword" doc:id="b17f4671-6968-46ec-8ab4-558e972af670" name="changepassword"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="a6fc8e34-5c49-481c-813b-70ef74c79ace" actual="#[payload]" expected='#[{&#10;	"Message" : "Your password has been changed successfully "&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-addsubscriptionTest" doc:id="a7d4a812-bb12-42e0-9207-ae882f211b1b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b25a5cfe-22d9-4cf5-b152-f90695908cba" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="65cdbdea-435b-488b-904c-52da5bf6d5ae" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value='#[{uriParams : { userid : "111"}}]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="dc315aa0-0502-46b5-8e80-5f81358b8a5e" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="POST" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="61d9139e-0c01-4a87-8845-3fc3585e1a4b" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/subscriptions" attributeName="path" />
+					<munit-tools:with-attribute whereValue="subscriptionid" attributeName="target" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;    "USER_ID" : "1227",&#10;    "SUBSCRIPTION_ID": 2308,&#10;  "STATUS_TYPE_ID": 1,&#10;  "SOURCE_LOCATION": "XreQ",&#10;  "DESTINATION_LOCATION": "CJgS",&#10;  "FROM_TIME": "12:00:00",&#10;  "TO_TIME": "18:30:00",&#10;  "ADVANCE_NOTIFY_TIME_MIN": 30&#10;}&#10;]' />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to addsubscription" doc:id="25dc72ea-7bb1-42d1-bd4c-1cdc722c2913" name="addsubscription"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="81e01359-953e-4bc1-88cb-e4a493786371" actual="#[payload]" expected='#[{&#10;	"Message" : "Subscription added successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-getsubscriptionTest" doc:id="7e7cb683-cf9e-48a0-b83a-6685049bedb8" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="72d2c521-3a3f-475d-9c6b-4889d18ae6ca" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b63e16b2-15df-4e1a-a3da-7d06617e2d99" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value="#[{uriParams : {userid : '102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="870d718a-67fa-4da0-8bba-6677f897f68f" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="21040105-d0ac-4b79-882c-0830f66bd9c8" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/user/{user_id}/subscription" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value="#[{uriParams : { user_id : '102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getsubscription" doc:id="2057af8c-799b-4105-9a82-54eba8941593" name="getsubscription"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="cef49e8f-4c03-4c15-8a91-04627937e350" actual="#[payload]" expected='#[[&#10;    {&#10;        "SUBSCRIPTION_ID": 221,&#10;        "SOURCE_LOCATION": "XDQ",&#10;        "ADVANCE_NOTIFY_TIME_MIN": 30,&#10;        "USER_ID": "1221",&#10;        "STATUS_TYPE_ID": 2,&#10;        "UPDATED_TIMESTAMP": "2022-12-13T15:13:51",&#10;        "CREATION_TIMESTAMP": "2022-12-13T15:13:51",&#10;        "DESTINATION_LOCATION": "CDS",&#10;        "TO_TIME": "1970-01-01T18:30:00",&#10;        "FROM_TIME": "1970-01-01T12:00:00"&#10;    },&#10;    {&#10;        "SUBSCRIPTION_ID": 231,&#10;        "SOURCE_LOCATION": "XreQ",&#10;        "ADVANCE_NOTIFY_TIME_MIN": 30,&#10;        "USER_ID": "1221",&#10;        "STATUS_TYPE_ID": 2,&#10;        "UPDATED_TIMESTAMP": "2022-12-13T15:15:10",&#10;        "CREATION_TIMESTAMP": "2022-12-13T15:15:10",&#10;        "DESTINATION_LOCATION": "CJgS",&#10;        "TO_TIME": "1970-01-01T18:30:00",&#10;        "FROM_TIME": "1970-01-01T12:00:00"&#10;    }&#10;]]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-updatesubscriptionTest" doc:id="971c3819-8673-49d9-b297-e636a5c52314" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="72ef69ba-12e6-40b6-96a3-8499c42c3590" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Requesting validate session" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="45fb07aa-0039-44b8-b5ea-b6cc56e2c8db" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value="#[{uriParams : {userid : '102G78rNSrfRGehMaqK6loxjg'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2541ca7c-d90d-4b6f-9fc1-74c82ca25608" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="PUT" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a5d15e58-221f-4963-a4f0-c7da81697018" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/user/{user_id}/subscription/{subscription_id}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[{&#10;  "SOURCE_LOCATION": "BAT",&#10;  "DESTINATION_LOCATION": "GLT",&#10;  "FROM_TIME": "12:40:00",&#10;  "TO_TIME": "20:00:00",&#10;  "STATUS_TYPE_ID" : 2&#10;}&#10;]' />
+					<munit-tools:attributes value="#[{uriParams : {user_id : '102G78rNSrfRGehMaqK6loxjg',subscription_id : '1223'}}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to updatesubscription" doc:id="40397695-67c2-4a47-8eca-2c1efd60780e" name="updatesubscription"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3ab0d207-3695-408c-951a-6dbfed4eb796" actual="#[payload]" expected='#[{&#10;	"Message" : "Your subscription details are updated"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="experienceapiflows-test-suite-logoutuserFlowTest" doc:id="d20ed922-9b25-41a2-8a47-491982b9588c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ae953fcc-23cf-430a-822d-8ece9b9a2327" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="DELETE" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="110a0f77-2c0c-4c2a-bd1a-7febdc60584f" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration1" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/sessions/{userid}" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:attributes value="#[{uriParams: {user_id: '102G78rNSrfRGehMaqK6loxjg' }}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to logoutuserFlow" doc:id="50dbdda2-6409-4c27-bfc3-8601edcb83c7" name="logoutuserFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d00d006d-9cf9-40e8-9034-35147b8737e6" actual="#[payload]" expected='#[{&#10;	"Message" : "User logged out successfully"&#10;}]'/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

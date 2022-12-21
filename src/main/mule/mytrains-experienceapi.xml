@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <flow name="mytrains-experienceapi-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="mytrains-experienceapi-config" />
+		<error-handler ref="errorhandlingError_Handler" />
+        
+    </flow>
+    <flow name="mytrains-experienceapi-console">
+        <http:listener config-ref="HTTP_Listener_config" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="mytrains-experienceapi-config" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="put:\subscription\updatesubscription\(subscription_id):application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6236eb2a-d442-44ca-9811-bd6257b5db51" name="updatesubscription" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="put:\user\updateuser:application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="729a32cf-be8f-4f3d-9180-c79188206b74" name="updateuserFlow" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="get:\user\getuser:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="02fb046f-41c5-41d7-9427-e36969763b01" name="getuserFlow" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="get:\subscription\getusersubscription:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6d9a71e3-bd3e-4d62-ac5b-3506390d9bbf" name="getsubscription" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    
+    <flow name="post:\authn\recovery\password:application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="e7dabf73-ba8f-49c5-bcbb-085008b85b81" name="recoverypassword" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="post:\subscriptions:application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="f6a1b2a0-683f-4ca2-b947-27dc7f2c8fb7" name="addsubscription" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="delete:\user\logout:application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="6a9a5ced-3437-4538-9b0d-7368fe9c8e23" name="logoutuserFlow" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="post:\user\change_password:application\json:mytrains-experienceapi-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b13e7fe0-c3c6-461a-9041-9ab0c1d3c320" name="changepassword" />
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="post:\Loginuser:application\json:mytrains-experienceapi-config">
+		<flow-ref doc:name="Flow Reference" doc:id="8b13f162-d198-453c-bed2-ce4f2c679360" name="Loginuser"/>
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+    <flow name="post:\registeruser:application\json:mytrains-experienceapi-config">
+		<flow-ref doc:name="Flow Reference" doc:id="fddc28cc-ac52-4203-a774-bb41518b7585" name="Registeruser"/>
+		<error-handler ref="errorhandlingError_Handler" />
+    </flow>
+</mule>

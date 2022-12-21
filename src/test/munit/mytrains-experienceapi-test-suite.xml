@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mytrains-experienceapi-test-suite.xml" />
+	<munit:test name="mytrains-experienceapi-test-suite-mytrains-experienceapi-mainTest" doc:id="4ae42a11-a986-41bc-a89b-91976a88c34c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a0c7e6bf-2601-4b17-812d-fc0c36885f57" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mytrains-experienceapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mytrains-experienceapi-main" doc:id="56ff0c77-fef0-4ace-b947-aa7b71a1c795" name="mytrains-experienceapi-main"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-mytrains-experienceapi-consoleTest" doc:id="8f91ed4a-20fc-48fc-a8bb-7e14407c610b" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3e4bb077-4e44-43fb-a924-62ff220ab475" processor="apikit:console">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mytrains-experienceapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mytrains-experienceapi-console" doc:id="253b5b72-f79b-41ad-9f75-433b61221f69" name="mytrains-experienceapi-console"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-put:\subscription\updatesubscription\(subscription_id):application\json:mytrains-experienceapi-configTest" doc:id="7cf1fe2d-883c-40d3-8847-7d5e15294d0c" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e49653b5-7241-4f1a-aa15-6e818b7d30e4" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="6236eb2a-d442-44ca-9811-bd6257b5db51" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="updatesubscription" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\subscription\updatesubscription\(subscription_id):application\json:mytrains-experienceapi-config" doc:id="a7b9cd69-9e2b-4db5-ae48-39b78f1885c8" name="put:\subscription\updatesubscription\(subscription_id):application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-put:\user\updateuser:application\json:mytrains-experienceapi-configTest" doc:id="90a54621-b9e8-428f-a01d-dbe055bdce68" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="54818b96-ad47-469d-8375-04490ba877d9" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="729a32cf-be8f-4f3d-9180-c79188206b74" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="updateuserFlow" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\user\updateuser:application\json:mytrains-experienceapi-config" doc:id="b636bcbb-92b9-40ba-8f7c-cbb77400f46b" name="put:\user\updateuser:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-get:\user\getuser:mytrains-experienceapi-configTest" doc:id="b55beb96-5ace-4069-86bd-c9731b6c3ee0" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a54259cc-2f0d-47ba-9755-5e52d05cc298" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="02fb046f-41c5-41d7-9427-e36969763b01" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="getuserFlow" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\user\getuser:mytrains-experienceapi-config" doc:id="8da1f6bb-ce6a-411c-87d8-a1507debca50" name="get:\user\getuser:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-get:\subscription\getusersubscription:mytrains-experienceapi-configTest" doc:id="d902e861-7caa-4c88-b04c-1d1278e4fb1d" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3b5b63a8-3f31-43e4-80ce-dafef5ef8bec" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="6d9a71e3-bd3e-4d62-ac5b-3506390d9bbf" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="getsubscription" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\subscription\getusersubscription:mytrains-experienceapi-config" doc:id="d16d9c12-d417-48d6-b90a-d2c2d6bade61" name="get:\subscription\getusersubscription:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-post:\authn\recovery\password:application\json:mytrains-experienceapi-configTest" doc:id="0af45798-d969-45cd-b682-21372bac3812" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="66944a26-da12-48d9-a19e-5eafe92c9d86" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="e7dabf73-ba8f-49c5-bcbb-085008b85b81" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="recoverypassword" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\authn\recovery\password:application\json:mytrains-experienceapi-config" doc:id="ef47d623-55a4-408e-ad43-c36842813853" name="post:\authn\recovery\password:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-post:\subscriptions:application\json:mytrains-experienceapi-configTest" doc:id="d5855577-dd44-49fd-8e80-a4d2b659c02f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="42c449e1-2917-43be-8de7-9e896f134915" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="f6a1b2a0-683f-4ca2-b947-27dc7f2c8fb7" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="addsubscription" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\subscriptions:application\json:mytrains-experienceapi-config" doc:id="03eb71ef-0bc0-4bbe-98d3-2f68ef19f6a7" name="post:\subscriptions:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-delete:\user\logout:application\json:mytrains-experienceapi-configTest" doc:id="065ab306-0d13-4361-9fdc-680301ad38ea" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="f791dcba-c330-47f1-8492-0a38fe521ab0" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="6a9a5ced-3437-4538-9b0d-7368fe9c8e23" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="logoutuserFlow" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete:\user\logout:application\json:mytrains-experienceapi-config" doc:id="f1899042-403c-48e7-bc5c-6b8e575d8957" name="delete:\user\logout:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-post:\user\change_password:application\json:mytrains-experienceapi-configTest" doc:id="6d3701b6-377b-4e32-b3d5-6852cf52412f" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="af92e4cc-2bce-41cf-9796-317f027fa1a7" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b13e7fe0-c3c6-461a-9041-9ab0c1d3c320" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="changepassword" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\user\change_password:application\json:mytrains-experienceapi-config" doc:id="76fde24b-2cd6-454b-b8a8-12b99786b1c4" name="post:\user\change_password:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-post:\Loginuser:application\json:mytrains-experienceapi-configTest" doc:id="e98437bf-ee0c-455e-901d-f576951f3fc3" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9186534d-8ec3-4ab0-9de2-54ff8d31a85e" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8b13f162-d198-453c-bed2-ce4f2c679360" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Loginuser" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\Loginuser:application\json:mytrains-experienceapi-config" doc:id="38a13307-4e8b-4498-978f-add04ba44da8" name="post:\Loginuser:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-post:\registeruser:application\json:mytrains-experienceapi-configTest" doc:id="04f7c3bf-50b9-4aba-88d0-086d7167c353" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4437d261-8245-4510-9c93-80cd87333575" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Flow Reference" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="fddc28cc-ac52-4203-a774-bb41518b7585" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Registeruser" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post:\registeruser:application\json:mytrains-experienceapi-config" doc:id="50c5803f-c676-4728-ad14-245cfece3de6" name="post:\registeruser:application\json:mytrains-experienceapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mytrains-experienceapi-test-suite-mytrains-experienceapi-mainTest1" doc:id="ca656ddd-0b5a-463b-8dde-a2391c91e183" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="91d1211e-673a-4c0e-b18b-cb8cb29cadd4" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mytrains-experienceapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="f7bb259a-dd24-4f26-ae3c-a1dea080892a" >
+				<flow-ref doc:name="Flow-ref to mytrains-experienceapi-main" doc:id="c8911aa1-66cd-49de-81b1-818fe0b1c954" name="mytrains-experienceapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4946e256-1ec5-4736-9f80-2e191d5af99f" >
+						<logger level="INFO" doc:name="Logger" doc:id="b2bedeef-9693-4f97-9133-3495936bc34b" message="Continue"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2c553185-af7d-4aa3-89dd-64d66a9a1295" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>
